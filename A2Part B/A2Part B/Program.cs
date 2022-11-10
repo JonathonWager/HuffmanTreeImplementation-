@@ -398,20 +398,16 @@ namespace A2Part_B
                 Node lowest2;
                 while (PQ.Size() > 1)
                 {
-
                    lowest1 = PQ.Remove();
                    lowest2 = PQ.Remove();
                    PQ.Insert(new Node((char)0, lowest1.Frequency + lowest2.Frequency, lowest1, lowest2));
                 }
                 HT = PQ.Remove();
+                CreateCodes(HT,"");
             }
             // 12 marks
             // Create the code of 0s and 1s for each character by traversing the Huffman tree (invoked by Huffman)
             // Store the codes in Dictionary D using the char as the key
-            public void CreateCodes()
-            {
-                CreateCodes(HT, "");
-            }
             private void CreateCodes(Node HuffTree, string bits)
             {
                 Node curr = HuffTree;
@@ -424,29 +420,49 @@ namespace A2Part_B
                 else
                 {                 
                     D.Add(curr.Character, bits);
-                    Console.WriteLine(curr.Character + " Code " + bits);
-                }
+                }                
             }
             // 8 marks
             // Encode the given text and return a string of 0s and 1s
             public string Encode(string S)
             {
-                return "";
+                String ReturnCode = "";
+                for(int i = 0; i < S.Length; i++)
+                {
+                    ReturnCode = ReturnCode + D[S[i]] +" ";
+                }              
+                return ReturnCode;               
             }
             // 8 marks
             // Decode the given string of 0s and 1s and return the original text
             public string Decode(string S)
             {
-                return "";
+                string code = "";
+                string DecodedMessage = "";
+                for(int i =0; i < S.Length ; i++)
+                {
+                    if((S[i] == ' ' || i == (S.Length -1)))
+                    {
+                        if(S.Length-1 == i)
+                        {
+                            code = code + S[i];
+                        }
+                        DecodedMessage = DecodedMessage + D.FirstOrDefault(x => x.Value.Equals(code)).Key;
+                        code = "";  
+                    }
+                    else
+                    {
+                        code = code + S[i];
+                    }
+                }
+                return DecodedMessage;
             }
             public void PrintOrder()
             {
-                PrintOrder(HT, 0);
-              
+                PrintOrder(HT, 0);             
             }
             private void PrintOrder(Node root, int indent)
             {
-
                 if (root != null)
                 {
                     PrintOrder(root.Right, indent + 5);
@@ -458,18 +474,18 @@ namespace A2Part_B
                     {
                         Console.WriteLine(new String(' ', indent) + root.Frequency);
                     }
-
                     PrintOrder(root.Left, indent + 5);
                 }
             }
         }
         static void Main(string[] args)
         {
-            Huffman test = new Huffman("for each character by traversing the Huffman tree and return the original text  Decode the given string of Return the frequency of each character in the given text");
-            test.PrintOrder();
-            test.CreateCodes();
-            //Console.WriteLine((int)'A');
-            Console.ReadLine();
+            //Huffman test = new Huffman("AAAAAAAAAAAAAAABBBBBBBBBBBCBCCCCCCCCCCCDDDDEEEFGHHHHHHHHHHHHHIIIIIIIIJJJJJJJJJJJJJJJJ    K  K KKK KK K K K L LLLLL LL L L MM M M M MM M NN NO OO PP QQQ QQQWJRRRRR RASSSSSSTTT" +
+            //   " TUTTTUTUTUTUTU VVV WWWWXWXXXXXXX XXYYYZZZZ aaaaabbbbcccccsddddddeeegffffgggghhhgijjjjjjkkjkkkklllmnnnnnoooopppppqqqrrrrrssstttuvwwwwwwwwwxxxxyyyzzzzzzzz");
+            Huffman test = new Huffman("Hello World");
+            Console.WriteLine(test.Encode("Hello World"));
+            Console.WriteLine(test.Decode("0011 101 01 01 11 0010 0000 11 0001 01 100"));
+           Console.ReadLine();
         }
     }
 }
